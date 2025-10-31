@@ -1,0 +1,730 @@
+{
+  "info": {
+    "name": "HiMate Dating App API",
+    "description": "Complete API collection for HiMate Dating App Backend",
+    "version": "1.0.0",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "https://datebackend.onrender.com/api"
+    },
+    {
+      "key": "auth_token",
+      "value": ""
+    },
+    {
+      "key": "user_id",
+      "value": ""
+    }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{auth_token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Send OTP",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"mobileNumber\": \"9876543210\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/send-otp",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "send-otp"]
+            }
+          }
+        },
+        {
+          "name": "Verify OTP",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "    const response = pm.response.json();",
+                  "    pm.collectionVariables.set('auth_token', response.token);",
+                  "    pm.collectionVariables.set('user_id', response.user.id);",
+                  "}"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"mobileNumber\": \"9876543210\",\n  \"otp\": \"123456\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/auth/verify-otp",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "verify-otp"]
+            }
+          }
+        },
+        {
+          "name": "Get All Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/auth/users",
+              "host": ["{{base_url}}"],
+              "path": ["auth", "users"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Profile Management",
+      "item": [
+        {
+          "name": "Get My Profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/profile",
+              "host": ["{{base_url}}"],
+              "path": ["profile"]
+            }
+          }
+        },
+        {
+          "name": "Update Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"John Doe\",\n  \"dateOfBirth\": \"1995-01-15\",\n  \"gender\": \"Male\",\n  \"bio\": \"Looking for meaningful connections\",\n  \"location\": {\n    \"city\": \"Mumbai\",\n    \"state\": \"Maharashtra\",\n    \"country\": \"India\",\n    \"coordinates\": [72.8777, 19.0760]\n  },\n  \"preferences\": {\n    \"ageRange\": {\n      \"min\": 22,\n      \"max\": 30\n    },\n    \"maxDistance\": 25,\n    \"interestedIn\": \"Female\"\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/profile/update",
+              "host": ["{{base_url}}"],
+              "path": ["profile", "update"]
+            }
+          }
+        },
+        {
+          "name": "Upload Profile Photos",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "photos",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            },
+            "url": {
+              "raw": "{{base_url}}/profile/upload-photos",
+              "host": ["{{base_url}}"],
+              "path": ["profile", "upload-photos"]
+            }
+          }
+        },
+        {
+          "name": "Search Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/profile/search?gender=Female&minAge=22&maxAge=30&city=Mumbai&maxDistance=50&page=1&limit=20",
+              "host": ["{{base_url}}"],
+              "path": ["profile", "search"],
+              "query": [
+                {
+                  "key": "gender",
+                  "value": "Female"
+                },
+                {
+                  "key": "minAge",
+                  "value": "22"
+                },
+                {
+                  "key": "maxAge",
+                  "value": "30"
+                },
+                {
+                  "key": "city",
+                  "value": "Mumbai"
+                },
+                {
+                  "key": "maxDistance",
+                  "value": "50"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Random Online Users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/profile/random-online?limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["profile", "random-online"],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Update Online Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isOnline\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/profile/online-status",
+              "host": ["{{base_url}}"],
+              "path": ["profile", "online-status"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Matching System",
+      "item": [
+        {
+          "name": "Get Potential Matches",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/matches/potential?page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["matches", "potential"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Swipe User - Like",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"targetUserId\": \"USER_ID_HERE\",\n  \"action\": \"like\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/matches/swipe",
+              "host": ["{{base_url}}"],
+              "path": ["matches", "swipe"]
+            }
+          }
+        },
+        {
+          "name": "Swipe User - Super Like",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"targetUserId\": \"USER_ID_HERE\",\n  \"action\": \"superlike\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/matches/swipe",
+              "host": ["{{base_url}}"],
+              "path": ["matches", "swipe"]
+            }
+          }
+        },
+        {
+          "name": "Get My Matches",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/matches?page=1&limit=20",
+              "host": ["{{base_url}}"],
+              "path": ["matches"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Unmatch User",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/matches/MATCH_ID_HERE",
+              "host": ["{{base_url}}"],
+              "path": ["matches", "MATCH_ID_HERE"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Messaging",
+      "item": [
+        {
+          "name": "Send Message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"receiverId\": \"RECEIVER_USER_ID\",\n  \"content\": \"Hello! How are you?\",\n  \"messageType\": \"text\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/messages/send",
+              "host": ["{{base_url}}"],
+              "path": ["messages", "send"]
+            }
+          }
+        },
+        {
+          "name": "Get Conversation",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/messages/conversation/RECEIVER_USER_ID?page=1&limit=20",
+              "host": ["{{base_url}}"],
+              "path": ["messages", "conversation", "RECEIVER_USER_ID"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get All Conversations",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/messages/conversations?page=1&limit=20",
+              "host": ["{{base_url}}"],
+              "path": ["messages", "conversations"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Mark Message as Read",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/messages/read/MESSAGE_ID",
+              "host": ["{{base_url}}"],
+              "path": ["messages", "read", "MESSAGE_ID"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Payment & Coins",
+      "item": [
+        {
+          "name": "Get Coin Packages",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/payment/packages",
+              "host": ["{{base_url}}"],
+              "path": ["payment", "packages"]
+            }
+          }
+        },
+        {
+          "name": "Create Payment Order",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"packageType\": \"basic\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/payment/create-order",
+              "host": ["{{base_url}}"],
+              "path": ["payment", "create-order"]
+            }
+          }
+        },
+        {
+          "name": "Verify Payment",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"transactionId\": \"TRANSACTION_ID\",\n  \"paymentId\": \"pay_test_123\",\n  \"signature\": \"test_signature\",\n  \"orderId\": \"order_test_123\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/payment/verify",
+              "host": ["{{base_url}}"],
+              "path": ["payment", "verify"]
+            }
+          }
+        },
+        {
+          "name": "Get Coin Balance",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/payment/balance",
+              "host": ["{{base_url}}"],
+              "path": ["payment", "balance"]
+            }
+          }
+        },
+        {
+          "name": "Deduct Coins",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"purpose\": \"voice_call\",\n  \"amount\": 5,\n  \"targetUserId\": \"TARGET_USER_ID\",\n  \"duration\": 300\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/payment/deduct",
+              "host": ["{{base_url}}"],
+              "path": ["payment", "deduct"]
+            }
+          }
+        },
+        {
+          "name": "Reward Coins",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"purpose\": \"daily_bonus\",\n  \"amount\": 10,\n  \"description\": \"Daily login bonus\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/payment/reward",
+              "host": ["{{base_url}}"],
+              "path": ["payment", "reward"]
+            }
+          }
+        },
+        {
+          "name": "Get Transaction History",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/payment/transactions?type=purchase&page=1&limit=20",
+              "host": ["{{base_url}}"],
+              "path": ["payment", "transactions"],
+              "query": [
+                {
+                  "key": "type",
+                  "value": "purchase"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "20"
+                }
+              ]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Gaming System",
+      "item": [
+        {
+          "name": "Create Game Session",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"gameType\": \"tic-tac-toe\"\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/games/create",
+              "host": ["{{base_url}}"],
+              "path": ["games", "create"]
+            }
+          }
+        },
+        {
+          "name": "Get Available Games",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/games/available?gameType=tic-tac-toe&page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["games", "available"],
+              "query": [
+                {
+                  "key": "gameType",
+                  "value": "tic-tac-toe"
+                },
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Join Game Session",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/games/join/ROOM_ID",
+              "host": ["{{base_url}}"],
+              "path": ["games", "join", "ROOM_ID"]
+            }
+          }
+        },
+        {
+          "name": "Get My Games",
+          "request+": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/games/my-games?page=1&limit=10",
+              "host": ["{{base_url}}"],
+              "path": ["games", "my-games"],
+              "query": [
+                {
+                  "key": "page",
+                  "value": "1"
+                },
+                {
+                  "key": "limit",
+                  "value": "10"
+                }
+              ]
+            }
+            
+          }
+        },
+        {
+          "name": "Update Player Ready Status",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isReady\": true\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/games/ROOM_ID/ready",
+              "host": ["{{base_url}}"],
+              "path": ["games", "ROOM_ID", "ready"]
+            }
+          }
+        },
+        {
+          "name": "End Game",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"winnerId\": \"WINNER_USER_ID\",\n  \"gameResult\": {\n    \"score\": \"3-0\",\n    \"moves\": []\n  }\n}"
+            },
+            "url": {
+              "raw": "{{base_url}}/games/ROOM_ID/end",
+              "host": ["{{base_url}}"],
+              "path": ["games", "ROOM_ID", "end"]
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Health Check",
+      "item": [
+        {
+          "name": "Server Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/../",
+              "host": ["{{base_url}}"],
+              "path": [".."]
+            }
+          }
+        },
+        {
+          "name": "API Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/status",
+              "host": ["{{base_url}}"],
+              "path": ["status"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
